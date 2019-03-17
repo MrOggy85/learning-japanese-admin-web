@@ -27,3 +27,28 @@ export function saveSettings(settings) {
   const settingsString = JSON.stringify(settings);
   localStorage.setItem('settings', settingsString);
 }
+
+export function handleError(error) {
+  const BASE_URL = getBaseUrl();
+  if (error.status === 401) {
+    const url = '/login';
+    this.$root.currentRoute = `${BASE_URL}${url}`;
+
+    window.history.pushState(
+      url,
+      '',
+      `${BASE_URL}${url}`,
+    );
+  }
+}
+
+export function navigate(url) {
+  const BASE_URL = getBaseUrl();
+  this.$root.currentRoute = `${BASE_URL}${url}`;
+
+  window.history.pushState(
+    url,
+    '',
+    `${BASE_URL}${url}`,
+  );
+}

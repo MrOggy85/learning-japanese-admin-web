@@ -4,6 +4,10 @@
       <div class="nav-bar-item desktop">
         <div class="menu-choices">
           <v-link href="/">HOME</v-link>
+          <v-link href="/login">LOGIN</v-link>
+          <v-link href="/list-sentences">SENTENCES</v-link>
+          <v-link href="/list-challenges">CHALLENGES</v-link>
+          <v-link href="/list-tags">TAGS</v-link>
         </div>
         <h3>{{ getTitle }}</h3>
         <img class="logo" width="60" src="logo.png" />
@@ -37,7 +41,7 @@ export default {
   },
   computed: {
     getTitle() {
-      return this.title ? capitalize(this.title) : 'Sentences';
+      return this.title ? capitalize(this.title) : 'Admin';
     },
     hasTitle() {
       return this.title;
@@ -48,10 +52,8 @@ export default {
 
 <style scoped>
   .main-layout-container {
-    height: 100%;
     margin: 0 auto;
     padding: 0;
-    background: #f9f7f5;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -76,6 +78,7 @@ export default {
   .menu-choices {
     display: flex;
     flex-direction: column;
+    align-self: flex-start;
   }
   .menu-choices a {
     margin-bottom: 5px;

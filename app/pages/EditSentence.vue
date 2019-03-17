@@ -1,7 +1,7 @@
 
 <template>
   <main-layout
-    :title="'Edit Sentence ' + sentence._id"
+    :title="title"
   >
     <div class="container">
       <div class="box english-box">
@@ -75,13 +75,23 @@
         <label for="tags">Tags</label>
         <ul id="tags">
           <li
-            v-for="(_, index) in sentence.tags"
+            v-for="(sentenceTag, index) in sentence.tags"
             :key="index"
           >
-            <input
+            <select v-model="sentence.tags[index]">
+              <option value="">--Please choose an option--</option>
+              <option
+                v-for="(tag, i) in tags"
+                :key="i"
+                :value="tag._id"
+              >
+                {{ tag.name }}
+              </option>
+            </select>
+            <!-- <input
               v-model="sentence.tags[index]"
-              type="text"
-            />
+              type=""
+            /> -->
             <input
               type="button"
               value="X"
@@ -124,7 +134,7 @@ import MainLayout from '../layouts/Main.vue';
 import request from '../utils/request';
 import SpeechRecognitionAdapter, { ErrorCode } from '../utils/SpeechRecognitionAdapter';
 import SpeechSynthesisAdapter from '../utils/SpeechSynthesisAdapter';
-import { getBaseUrl } from '../utils/utils';
+import { getBaseUrl, handleError } from '../utils/utils';
 const BASE_URL = getBaseUrl();
 
 const {
@@ -154,6 +164,8 @@ const app: App = {
 
       actionText: 'Start',
 
+      tags: [],
+
       // SpeechInput
       speechRecognition: null,
       speechSynthesis: null,
@@ -164,6 +176,12 @@ const app: App = {
     };
   },
   computed: {
+    title() {
+      return this.sentence._id
+        ? `Edit Sentence ${this.sentence._id}`
+        : 'New Sentence';
+    },
+
     isInputValid() {
       return !!this.sentence.en
         && !!this.sentence.hint
@@ -195,20 +213,31 @@ const app: App = {
     onActionButtonClick() {
       this.startSpeechRecognition.call(this);
     },
-    send(event) {
+    async send(event) {
       event.preventDefault();
-      this.$root.currentRoute = `${BASE_URL}/`;
+
+      try {
+        const method = this.sentence._id ? 'put' : 'post';
+
+        const result = await request[method]({
+          endpoint: `${VUE_APP_API_ENDPOINT}/sentence`,
+          payload: this.sentence,
+        });
+        this.sentence = result;
+      } catch (error) {
+        handleError.bind(this)(error);
+        return;
+      }
+
+      this.$root.currentRoute = `${BASE_URL}/list-sentences`;
 
       const sentenceId = new URLSearchParams(window.location.search).get('sentence') || '';
-
-      // todo when request success
-      // grab sentence id and replace current state with sentence id
 
       if (window.history.state && sentenceId) {
         window.history.pushState(
           null,
           '',
-          `${BASE_URL}/`,
+          `${BASE_URL}/list-sentences`,
         );
       } else {
         window.history.back();
@@ -219,22 +248,19 @@ const app: App = {
     const sentenceId = new URLSearchParams(window.location.search).get('sentence') || '';
 
     if (sentenceId) {
-      // const result = await request.get({ endpoint: `${VUE_APP_API_ENDPOINT}/${sentenceId}` });
-      const result = {
-        _id: '8242849248957395',
-        en: 'Example Sentence',
-        ja: [
-          'japnese sentencce 1',
-          'japnese sentencce 2',
-        ],
-        hint: 'this is a hint',
-        tags: [
-          'Tag 1',
-          'Tag 2',
-        ],
-      };
+      try {
+        const result = await request.get({ endpoint: `${VUE_APP_API_ENDPOINT}/sentence/${sentenceId}` });
+        this.sentence = result;
+      } catch (error) {
+        handleError.bind(this)(error);
+      }
+    }
 
-      this.sentence = result;
+    try {
+      const tags = await request.get({ endpoint: `${VUE_APP_API_ENDPOINT}/tag/` });
+      this.tags = tags;
+    } catch (error) {
+      // handleError.bind(this)(error);
     }
 
     this.speechRecognition = new SpeechRecognitionAdapter();

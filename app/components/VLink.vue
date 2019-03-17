@@ -1,6 +1,7 @@
 <template>
   <a
     :href="fullHref"
+    :style="extraStyle"
     @click="go"
   >
     <slot />
@@ -31,6 +32,11 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    extraStyle: {
+      type: String,
+      required: false,
+      default: '',
     },
   },
   computed: {

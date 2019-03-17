@@ -4,6 +4,8 @@
   "private": true,
   "description": "Admin UI for Learning Japanese",
   "author": "Oskar Lindgren <lindgren.oskar@gmail.com>",
+  "keywords": [],
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve app/main.js",
     "build": "vue-cli-service build app/main.js",
@@ -56,7 +58,5 @@
     "webpack": "^4.29.3",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14"
-  },
-  "keywords": [],
-  "license": "MIT"
+  }
 }

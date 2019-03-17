@@ -42,6 +42,7 @@ module.exports = {
     'brace-style': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 1,
+    'no-underscore-dangle': 0,
     'lines-between-class-members': 0,
 
     'vue/max-attributes-per-line': 0,

@@ -28,6 +28,12 @@ async function call({ endpoint, options, config }) {
       const response = await fetch(endpoint, options);
       clearTimeout(timeoutId);
 
+      if (!response.ok) {
+        const err = new Error(response.statusText);
+        err.status = response.status;
+        return reject(err);
+      }
+
       const data = await response.json();
       return resolve(data);
     } catch (err) {
@@ -43,6 +49,7 @@ async function get({ endpoint, options, config }) {
     endpoint,
     options: {
       method: 'GET',
+      credentials: 'include',
       ...options,
     },
     config,
@@ -58,6 +65,7 @@ async function sendData(method, { endpoint, payload, options, config }) {
         'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify(payload),
+      credentials: 'include',
       ...options,
     },
     config,
