@@ -56,9 +56,13 @@ export default {
       }
     },
     async login() {
+      const {
+        VUE_APP_API_ENDPOINT,
+      } = process.env;
+
       try {
         await request.post({
-          endpoint: 'http://localhost:3000/login',
+          endpoint: `${VUE_APP_API_ENDPOINT}/login`,
           payload: {
             username: this.username,
             password: this.password,
