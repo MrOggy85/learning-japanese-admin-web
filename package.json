@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "Admin UI for Learning Japanese",
-  "author": "Oskar Lindgren <lindgren.oskar@gmail.com>",
+  "author": {
+    "name": "Oskar Lindgren",
+    "url": "https://www.oskarlindgren.se"
+  },
   "keywords": [],
   "license": "MIT",
   "scripts": {
